@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+
+  <div class="bg-white shadow-lg rounded-xl p-6 w-96">
+
+    <h1 class="text-2xl font-bold text-center mb-4">My Notes</h1>
+
+    <!-- Input -->
+    <input 
+      id="noteInput"
+      type="text"
+      placeholder="Write a note..."
+      class="w-full mb-3 px-4 py-2 border rounded-lg"
+    >
+
+    <!-- Button -->
+    <button 
+      onclick="addNote()"
+      class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+    >
+      Add Note
+    </button>
+
+    <!-- Notes Display -->
+    <div id="notesContainer" class="mt-4 space-y-2"></div>
+
+  </div>
+
+<script>
+async function addNote() {
+
+  const noteInput = document.getElementById("noteInput");
+  const note = noteInput.value;
+
+  if (!note) {
+    alert("Write something first!");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/notes",
+      { notes: note },
+      {
+        headers: {
+          token: localStorage.getItem("token") // 🔐 IMPORTANT
+        }
+      }
+    );
+
+    // display note instantly
+    const container = document.getElementById("notesContainer");
+
+    const div = document.createElement("div");
+    div.className = "bg-gray-200 p-2 rounded";
+    div.innerText = note;
+
+    container.appendChild(div);
+
+    // clear input
+    noteInput.value = "";
+
+  } catch (err) {
+    alert("Error adding note (maybe token missing?)");
+  }
+}
+</script>
+
+</body>
+</html>

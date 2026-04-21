@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteApp</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <!-- Title -->
+  <h1 class="text-center pt-10 text-3xl font-bold text-gray-800">
+    NoteApp
+  </h1>
+
+  <!-- Input Box -->
+  <div class="flex justify-center mt-8">
+    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
+
+      <input 
+        type="text" 
+        id="addnotes"
+        placeholder="Add your notes here"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg 
+               focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+
+      <button onclick="change()"
+        class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg 
+               hover:bg-blue-600 transition 
+               focus:ring-2 focus:ring-blue-400">
+        Create
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Notes Display -->
+  <div class="flex justify-center mt-10">
+    <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-lg">
+
+      <div id="notesContainer" class="flex flex-col gap-4"></div>
+
+    </div>
+  </div>
+
+  <!-- JS -->
+<script>
+const token = localStorage.getItem("token");
+
+// 🔥 protect page
+if (!token) {
+  alert("Please login first");
+  window.location.href = "/signin.html";
+}
+
+// 🔥 Add note
+async function change() {
+  let value = document.getElementById("addnotes").value;
+
+  await axios.post("/notes",
+    { note: value },
+    {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    }
+  );
+
+  document.getElementById("addnotes").value = "";
+  getNotes();
+}
+
+// 🔥 Get notes
+async function getNotes() {
+  let container = document.getElementById("notesContainer");
+
+  let response = await axios.get("/notes-data", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+
+  let notes = response.data.notes;
+
+  container.innerHTML = "";
+
+  notes.forEach(n => {
+    container.innerHTML += `
+      <div class="p-4 bg-gray-50 rounded-lg shadow-sm border">
+        ${n.note}
+      </div>
+    `;
+  });
+}
+
+// load on start
+getNotes();
+</script>
+
+</body>
+</html>

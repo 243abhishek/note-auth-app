@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+
+  <div class="bg-white shadow-lg rounded-xl p-8 w-80">
+
+    <h1 class="text-2xl font-bold text-center mb-6">Sign In</h1>
+
+    <!-- Email -->
+    <input 
+      id="email"
+      type="email" 
+      placeholder="Email"
+      class="w-full mb-3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+
+    <!-- Password -->
+    <input 
+      id="password"
+      type="password" 
+      placeholder="Password"
+      class="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+
+    <!-- Button -->
+    <button 
+      onclick="signin()"
+      class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+    >
+      Sign In
+    </button>
+
+    <p class="text-center text-sm mt-4">
+      Don't have an account?
+      <a href="/signup.html" class="text-blue-500 hover:underline">Sign Up</a>
+    </p>
+
+  </div>
+
+ <script>
+async function signin() {
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  if (!username || !password) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/signin", {
+      username,
+      password
+    });
+
+    localStorage.setItem("token", res.data.token);
+
+    window.location.href = "/notes";
+
+  } catch (err) {
+    alert(err.response?.data || "Invalid username or password");
+  }
+}
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <title>Signup</title>
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+
+  <div class="bg-white shadow-lg rounded-xl p-8 w-80">
+
+    <h1 class="text-2xl font-bold text-center mb-6">Sign Up</h1>
+
+    <!-- Username -->
+    <input 
+      id="username"
+      type="text" 
+      placeholder="Username"
+      class="w-full mb-3 px-4 py-2 border rounded-lg"
+    >
+
+    <!-- Password -->
+    <input 
+      id="password"
+      type="password" 
+      placeholder="Password"
+      class="w-full mb-4 px-4 py-2 border rounded-lg"
+    >
+
+    <!-- Button -->
+    <button 
+      onclick="signup()"
+      class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+    >
+      Create Account
+    </button>
+
+  </div>
+
+<script>
+async function signup() {
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  // validation
+  if (!username || !password) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/signup", {
+      username,
+      password
+    });
+
+    alert(res.data);
+
+    // optional: redirect
+    window.location.href = "/sigin";
+
+  } catch (err) {
+    alert("Signup failed");
+  }
+}
+</script>
+
+</body>
+</html>
